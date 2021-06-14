@@ -1,0 +1,30 @@
+# what is the most selling proucuts?
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('D:\SalesAnalysis\Output\data.csv')
+
+
+# Cleaning data
+nan = data[data.isna().any(axis=1)]
+data= data.dropna(how='all')
+
+# Cleaning data
+data = data[data["Order Date"].str[0:2] != 'Or']
+
+
+data['Quantity Ordered'] = pd.to_numeric(data['Quantity Ordered'])
+
+prod = data.groupby("Product").sum()
+
+
+products = [Product for Product, df in data.groupby('Product')]
+
+plt.bar(products , prod['Quantity Ordered'])
+plt.xticks(products , rotation='vertical', size=8)
+plt.title('most selling products')
+plt.xlabel('products')
+plt.ylabel('Quantity Ordered')
+
+plt.show()
