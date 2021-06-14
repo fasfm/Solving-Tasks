@@ -1,0 +1,39 @@
+# what is the best time to show Ads?
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('D:\SalesAnalysis\Output\data.csv')
+
+# Cleaning data
+nan_data = data[data.isna().any(axis=1)]
+
+#drop it
+data= data.dropna(how='all')
+
+# if you trying to find some string and clean it from the mean data frame:
+data = data[data["Order Date"].str[0:2] != 'Or']
+
+
+
+data['Quantity Ordered'] = pd.to_numeric(data['Quantity Ordered'])
+data['Price Each'] = pd.to_numeric(data['Price Each'])
+
+data['Sales'] = data['Quantity Ordered'] * data['Price Each']
+
+# convert string to date time
+data['Order Date'] = pd.to_datetime(data['Order Date'])
+
+#create column for hours
+data['Hour'] = data['Order Date'].dt.hour
+
+#create column for minutes
+data['min'] = data['Order Date'].dt.minute
+
+
+hours =  [Hour for Hour, df in data.groupby('Hour')]
+
+plt.plot(hours , data.groupby(['Hour']).count())
+plt.xticks(hours)
+plt.grid()
+plt.show()
